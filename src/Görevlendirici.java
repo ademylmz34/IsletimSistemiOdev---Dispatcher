@@ -52,21 +52,23 @@ public class Görevlendirici {
 
                     gercekZamanliCalisanProses = gercekZamanliProsesler.ilkElemaniGetir();
                     gercekZamanliCalisanProses.setProsesDurumu("proses basladi");
-                    System.out.println(gercekZamanliCalisanProses.getColor()+zaman+"sn "+" " +gercekZamanliCalisanProses.getProsesSuresi()
-                            +" "+gercekZamanliCalisanProses.getOncelikDegeri()+" "+ gercekZamanliCalisanProses.getProsesId()+ "proses basladi");
+                    yazdir(gercekZamanliCalisanProses.getColor(),zaman,gercekZamanliCalisanProses.getProsesId(),gercekZamanliCalisanProses.getOncelikDegeri()
+                            ,gercekZamanliCalisanProses.getProsesSuresi(),gercekZamanliCalisanProses.getProsesDurumu());
                     kalanSure= gercekZamanliCalisanProses.getProsesSuresi()-1;
                     gercekZamanliCalisanProses.setProsesSuresi(kalanSure);
                 }
                 else{
                     if (gercekZamanliCalisanProses.getProsesSuresi()==0){
-                        System.out.println(gercekZamanliCalisanProses.getColor()+zaman+"sn "+" " +gercekZamanliCalisanProses.getProsesSuresi()
-                                +" "+gercekZamanliCalisanProses.getOncelikDegeri()+" "+ gercekZamanliCalisanProses.getProsesId()+ "proses sonlandı");
+                        gercekZamanliCalisanProses.setProsesDurumu("proses sonlandi");
+                        yazdir(gercekZamanliCalisanProses.getColor(),zaman,gercekZamanliCalisanProses.getProsesId(),gercekZamanliCalisanProses.getOncelikDegeri()
+                                ,gercekZamanliCalisanProses.getProsesSuresi(),gercekZamanliCalisanProses.getProsesDurumu());
                         gercekZamanliCalisanProses = null;
                         continue;
 
                     }else {
-                        System.out.println(gercekZamanliCalisanProses.getColor() + zaman + "sn " + " " +gercekZamanliCalisanProses.getProsesSuresi()
-                                +" "+gercekZamanliCalisanProses.getOncelikDegeri()+" "+ gercekZamanliCalisanProses.getProsesId() + "proses yürütülüyor");
+                        gercekZamanliCalisanProses.setProsesDurumu("proses yürütülüyor");
+                        yazdir(gercekZamanliCalisanProses.getColor(),zaman,gercekZamanliCalisanProses.getProsesId(),gercekZamanliCalisanProses.getOncelikDegeri()
+                                ,gercekZamanliCalisanProses.getProsesSuresi(),gercekZamanliCalisanProses.getProsesDurumu());
                         kalanSure = gercekZamanliCalisanProses.getProsesSuresi() - 1;
                         gercekZamanliCalisanProses.setProsesSuresi(kalanSure);
                     }
@@ -80,6 +82,7 @@ public class Görevlendirici {
                 if (gercekZamanliCalisanProses==null) {
                     if(!kullanıcıProsesleri.bosmu()){
                         for (var kullaniciProses : kullanıcıProsesleri.getAll().stream().toList()) {
+                            kullaniciProses.setProsesDurumu("proses kuyrukta");
                             if (kullaniciProses.getOncelikDegeri() == 1) {
                                 yuksekOncelikKuyrugu.ekle(kullaniciProses);
 
@@ -90,7 +93,7 @@ public class Görevlendirici {
                                 dusukOncelikKuyrugu.ekle(kullaniciProses);
 
                             }
-                            kullaniciProses.setProsesDurumu("proses kuyrukta");
+
                             kullanıcıProsesleri.sil(kullaniciProses);
                         }
                     }
@@ -103,16 +106,16 @@ public class Görevlendirici {
                         kullaniciProsesi = ortaOncelikKuyrugu.ilkElemaniGetir();
 
                     } else if(!dusukOncelikKuyrugu.bosmu()) {
-                        kullaniciProsesi = dusukOncelikKuyrugu.peek();
+                        kullaniciProsesi = dusukOncelikKuyrugu.ilkElemaniGetir();
                     }
 
 
 
-                    if(kullaniciProsesi.getProsesDurumu()=="proses kuyrukta"&&kullaniciProsesi.getProsesDurumu()!="proses zaman asimi"){
+                    if(kullaniciProsesi.getProsesDurumu()=="proses kuyrukta"){
 
                         kullaniciProsesi.setProsesDurumu("proses basladi");
-                        System.out.println(kullaniciProsesi.getColor()+zaman+"sn "+" "+kullaniciProsesi.getProsesSuresi()+" "+
-                                kullaniciProsesi.getOncelikDegeri()+" "+kullaniciProsesi.getProsesId()+ "proses basladi");
+                        yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
+                                ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu());
                         zaman++;
                         kalanSure = kullaniciProsesi.getProsesSuresi()-1;
                         kullaniciProsesi.setProsesSuresi(kalanSure);
@@ -125,16 +128,20 @@ public class Görevlendirici {
                                 kullaniciProsesi.setOncelikDegeri(3);
                                 dusukOncelikKuyrugu.ekle(kullaniciProsesi);
                             }
-                            System.out.println(kullaniciProsesi.getColor() + zaman + "sn " + " " +kullaniciProsesi.getProsesSuresi()+" "+
-                                    kullaniciProsesi.getOncelikDegeri()+" "+ kullaniciProsesi.getProsesId() + "proses beklemede");
+                            else if(kullaniciProsesi.getOncelikDegeri()==3){
+                                dusukOncelikKuyrugu.ekle(kullaniciProsesi);
+                            }
                             kullaniciProsesi.setProsesDurumu("proses beklemede");
+                            yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
+                                    ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu());
+
 
                             continue;
                         }
                         else{
-                            kullaniciProsesi.setProsesDurumu("proses sonlandı");
-                            System.out.println(kullaniciProsesi.getColor()+zaman+"sn "+" "+kullaniciProsesi.getProsesSuresi()+" "+
-                                    kullaniciProsesi.getOncelikDegeri()+" "+kullaniciProsesi.getProsesId()+ "proses sonlandi");
+                            kullaniciProsesi.setProsesDurumu("proses sonlandi");
+                            yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
+                                    ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu());
                             if(kullaniciProsesi.getOncelikDegeri()==3) {
                                 dusukOncelikKuyrugu.sil(kullaniciProsesi);
                             }
@@ -156,8 +163,8 @@ public class Görevlendirici {
                     else if(kullaniciProsesi.getProsesDurumu()=="proses beklemede"){
 
                         kullaniciProsesi.setProsesDurumu("proses yürütülüyor");
-                        System.out.println(kullaniciProsesi.getColor() + zaman + "sn " + " " +kullaniciProsesi.getProsesSuresi()+" "+
-                                kullaniciProsesi.getOncelikDegeri()+" "+ kullaniciProsesi.getProsesId() + "proses yürütülüyor");
+                        yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
+                                ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu());
                         zaman++;
                         kalanSure = kullaniciProsesi.getProsesSuresi() - 1;
                         kullaniciProsesi.setProsesSuresi(kalanSure);
@@ -170,16 +177,20 @@ public class Görevlendirici {
                                 kullaniciProsesi.setOncelikDegeri(3);
                                 dusukOncelikKuyrugu.ekle(kullaniciProsesi);
                             }
-                            System.out.println(kullaniciProsesi.getColor() + zaman + "sn " + " " +kullaniciProsesi.getProsesSuresi()+" "+
-                                    kullaniciProsesi.getOncelikDegeri()+" "+ kullaniciProsesi.getProsesId() + "proses beklemede");
+                            else if(kullaniciProsesi.getOncelikDegeri()==3){
+                                dusukOncelikKuyrugu.ekle(kullaniciProsesi);
+                            }
                             kullaniciProsesi.setProsesDurumu("proses beklemede");
+                            yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
+                                    ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu());
+
 
                             continue;
                         }
                         else{
-                            kullaniciProsesi.setProsesDurumu("proses sonlandı");
-                            System.out.println(kullaniciProsesi.getColor()+zaman+"sn "+" "+kullaniciProsesi.getProsesSuresi()+" "+
-                                    kullaniciProsesi.getOncelikDegeri()+" "+kullaniciProsesi.getProsesId()+ "proses sonlandi");
+                            kullaniciProsesi.setProsesDurumu("proses sonlandi");
+                            yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
+                                    ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu());
                             if(kullaniciProsesi.getOncelikDegeri()==3) {
                                 dusukOncelikKuyrugu.sil(kullaniciProsesi);
                             }
@@ -209,16 +220,17 @@ public class Görevlendirici {
             prosesZamanAsimiKontrol();
 
             zaman++;
-            continue;
+
         }
     }
 
-    private void prosesZamanAsimiKontrol(){
+    private boolean prosesZamanAsimiKontrol(){
         for(var proses : kullanıcıProsesleri.getAll().stream().toList()){
             if(proses.getProsesDurumu()!="proses sonlandi"){
                 if((zaman-proses.getVarisZamani())==21){
-                    System.out.println(proses.getColor()+zaman+"sn "+" "+proses.getProsesSuresi()+" "+
-                            proses.getOncelikDegeri()+" "+proses.getProsesId()+ "proses zaman asimi");
+                    proses.setProsesDurumu("proses zaman asimi");
+                    yazdir(proses.getColor(),zaman,proses.getProsesId(),proses.getOncelikDegeri()
+                            ,proses.getProsesSuresi(),proses.getProsesDurumu());
                     if(proses.getOncelikDegeri()==3) {
                         dusukOncelikKuyrugu.sil(proses);
                     }
@@ -229,7 +241,7 @@ public class Görevlendirici {
                         yuksekOncelikKuyrugu.sil(proses);
                     }
                     kullanıcıProsesleri.sil(proses);
-                    proses.setProsesDurumu("proses zaman asimi");
+
 
                 }
             }
@@ -237,8 +249,9 @@ public class Görevlendirici {
         for(var proses : yuksekOncelikKuyrugu.getAll().stream().toList()){
             if (proses.getProsesDurumu()!="proses sonlandi"){
                 if((zaman-proses.getVarisZamani())==21){
-                    System.out.println(proses.getColor()+zaman+"sn "+" "+proses.getProsesSuresi()+" "+
-                            proses.getOncelikDegeri()+" "+proses.getProsesId()+ "proses zaman asimi");
+                    proses.setProsesDurumu("proses zaman asimi");
+                    yazdir(proses.getColor(),zaman,proses.getProsesId(),proses.getOncelikDegeri()
+                            ,proses.getProsesSuresi(),proses.getProsesDurumu());
                     if(proses.getOncelikDegeri()==3) {
                         dusukOncelikKuyrugu.sil(proses);
                     }
@@ -249,7 +262,7 @@ public class Görevlendirici {
                         yuksekOncelikKuyrugu.sil(proses);
                     }
                     kullanıcıProsesleri.sil(proses);
-                    proses.setProsesDurumu("proses zaman asimi");
+
 
                 }
             }
@@ -257,8 +270,9 @@ public class Görevlendirici {
         for(var proses : ortaOncelikKuyrugu.getAll().stream().toList()){
             if (proses.getProsesDurumu()!="proses sonlandi"){
                 if((zaman-proses.getVarisZamani())==21){
-                    System.out.println(proses.getColor()+zaman+"sn "+" "+proses.getProsesSuresi()+" "+
-                            proses.getOncelikDegeri()+" "+proses.getProsesId()+ "proses zaman asimi");
+                    proses.setProsesDurumu("proses zaman asimi");
+                    yazdir(proses.getColor(),zaman,proses.getProsesId(),proses.getOncelikDegeri()
+                            ,proses.getProsesSuresi(),proses.getProsesDurumu());
                     if(proses.getOncelikDegeri()==3) {
                         dusukOncelikKuyrugu.sil(proses);
                     }
@@ -269,7 +283,7 @@ public class Görevlendirici {
                         yuksekOncelikKuyrugu.sil(proses);
                     }
                     kullanıcıProsesleri.sil(proses);
-                    proses.setProsesDurumu("proses zaman asimi");
+
 
                 }
             }
@@ -277,8 +291,9 @@ public class Görevlendirici {
         for(var proses : dusukOncelikKuyrugu.getAll().stream().toList()){
             if (proses.getProsesDurumu()!="proses sonlandi"){
                 if((zaman-proses.getVarisZamani())==21){
-                    System.out.println(proses.getColor()+zaman+"sn "+" "+proses.getProsesSuresi()+" "+
-                            proses.getOncelikDegeri()+" "+proses.getProsesId()+ "proses zaman asimi");
+                    proses.setProsesDurumu("proses zaman asimi");
+                    yazdir(proses.getColor(),zaman,proses.getProsesId(),proses.getOncelikDegeri()
+                            ,proses.getProsesSuresi(),proses.getProsesDurumu());
                     if(proses.getOncelikDegeri()==3) {
                         dusukOncelikKuyrugu.sil(proses);
                     }
@@ -289,11 +304,15 @@ public class Görevlendirici {
                         yuksekOncelikKuyrugu.sil(proses);
                     }
                     kullanıcıProsesleri.sil(proses);
-                    proses.setProsesDurumu("proses zaman asimi");
+
 
                 }
             }
 
         }
+        return true;
+    }
+    private void yazdir(String color, int zaman, int prosesId, int oncelik, int kalanSure,String prosesDurumu){
+        System.out.println(color+zaman+" sn "+"  "+ prosesDurumu+"\t" +"(id: "+prosesId +"   "+"öncelik: "+oncelik+"    "+ "kalan süre: "+kalanSure+")");
     }
 }
