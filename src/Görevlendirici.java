@@ -11,11 +11,11 @@ public class Görevlendirici {
 
     private int zaman;
     private int kalanSure;
-    private int sayac;
+
 
     private Proses gercekZamanliCalisanProses;
     private Proses kullaniciProsesi;
-    private Proses sonProses;
+
 
     public Görevlendirici(Kuyruk prosesler){
         this.gercekZamanliProsesler = new Kuyruk();
@@ -27,9 +27,7 @@ public class Görevlendirici {
 
         this.gercekZamanliCalisanProses=null;
         this.kullaniciProsesi = null;
-        this.sonProses = null;
         this.zaman=0;
-        this.sayac=0;
         this.kalanSure=0;
     }
 
