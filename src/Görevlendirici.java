@@ -37,46 +37,7 @@ public class Görevlendirici {
 
         while(true){
 
-            if(!prosesler.bosmu()){
-                for(var proses : prosesler.getAll().stream().toList())
-                {
-                    if(proses.getVarisZamani()==zaman){
-
-                        if(proses.getOncelikDegeri()==0){
-                            gercekZamanliProsesler.ekle(proses);
-
-                        }
-                        else{
-                            kullanıcıProsesleri.ekle(proses);
-                        }
-                        prosesler.sil(proses);
-                    }
-                }
-
-
-            }
-            if(!kullanıcıProsesleri.bosmu()) {
-                for (var kullaniciProses : kullanıcıProsesleri.getAll().stream().toList()) {
-                    kullaniciProses.setProsesDurumu("proses kuyrukta");
-
-                    if (kullaniciProses.getOncelikDegeri() == 1) {
-                        yuksekOncelikKuyrugu.ekle(kullaniciProses);
-
-                    } else if (kullaniciProses.getOncelikDegeri() == 2) {
-                        ortaOncelikKuyrugu.ekle(kullaniciProses);
-
-                    } else {
-                        dusukOncelikKuyrugu.ekle(kullaniciProses);
-
-                    }
-
-                    kullanıcıProsesleri.sil(kullaniciProses);
-                }
-            }
-
-
-
-
+            prosesleriKuyruklaraAta();
             if(!gercekZamanliProsesler.bosmu()||gercekZamanliCalisanProses!=null){
 
                 if(kullaniciProsesi.getProsesDurumu()=="proses basladi"){
@@ -191,6 +152,44 @@ public class Görevlendirici {
             }
 
 
+        }
+    }
+    private void prosesleriKuyruklaraAta(){
+        if(!prosesler.bosmu()){
+            for(var proses : prosesler.getAll().stream().toList())
+            {
+                if(proses.getVarisZamani()==zaman){
+
+                    if(proses.getOncelikDegeri()==0){
+                        gercekZamanliProsesler.ekle(proses);
+
+                    }
+                    else{
+                        kullanıcıProsesleri.ekle(proses);
+                    }
+                    prosesler.sil(proses);
+                }
+            }
+
+
+        }
+        if(!kullanıcıProsesleri.bosmu()) {
+            for (var kullaniciProses : kullanıcıProsesleri.getAll().stream().toList()) {
+                kullaniciProses.setProsesDurumu("proses kuyrukta");
+
+                if (kullaniciProses.getOncelikDegeri() == 1) {
+                    yuksekOncelikKuyrugu.ekle(kullaniciProses);
+
+                } else if (kullaniciProses.getOncelikDegeri() == 2) {
+                    ortaOncelikKuyrugu.ekle(kullaniciProses);
+
+                } else {
+                    dusukOncelikKuyrugu.ekle(kullaniciProses);
+
+                }
+
+                kullanıcıProsesleri.sil(kullaniciProses);
+            }
         }
     }
     private void prosesBekletmeVeyaSonlandirma(){
