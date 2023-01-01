@@ -39,6 +39,7 @@ public class Kuyruk {
             }
         }
         return enYuksekOncelikliProses;
+        int a;
     }
     public boolean prosesVarmi(Proses proses){
         return getAll().stream().anyMatch(x->x.getProsesId()==proses.getProsesId());
