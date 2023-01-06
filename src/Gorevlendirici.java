@@ -1,10 +1,8 @@
-import java.util.function.Predicate;
-
-public class Görevlendirici {
+public class Gorevlendirici {
 
     private Kuyruk prosesler;
     private Kuyruk gercekZamanliProsesler;
-    private Kuyruk kullanıcıProsesleri;
+    private Kuyruk kullaniciProsesleri;
     private Kuyruk yuksekOncelikKuyrugu;
     private Kuyruk ortaOncelikKuyrugu;
     private Kuyruk dusukOncelikKuyrugu;
@@ -17,9 +15,9 @@ public class Görevlendirici {
     private Proses kullaniciProsesi;
 
 
-    public Görevlendirici(Kuyruk prosesler){
+    public Gorevlendirici(Kuyruk prosesler){
         this.gercekZamanliProsesler = new Kuyruk();
-        this.kullanıcıProsesleri = new Kuyruk();
+        this.kullaniciProsesleri = new Kuyruk();
         this.yuksekOncelikKuyrugu = new Kuyruk();
         this.ortaOncelikKuyrugu = new Kuyruk();
         this.dusukOncelikKuyrugu = new Kuyruk();
@@ -129,7 +127,7 @@ public class Görevlendirici {
                     else if(kullaniciProsesi.getProsesDurumu()=="proses beklemede"){
                         prosesZamanAsimiKontrol();
                         kullaniciProsesi.setBeklemeSuresi(kullaniciProsesi.getBeklemeSuresi()+1);
-                        kullaniciProsesi.setProsesDurumu("proses yürütülüyor");
+                        kullaniciProsesi.setProsesDurumu("proses yurutuluyor");
 
                         yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
                                 ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu(), kullaniciProsesi.getBeklemeSuresi());
@@ -144,7 +142,7 @@ public class Görevlendirici {
 
             }
 
-            if(prosesler.bosmu()&& kullanıcıProsesleri.bosmu()&&gercekZamanliProsesler.bosmu()&& dusukOncelikKuyrugu.bosmu()&&
+            if(prosesler.bosmu()&& kullaniciProsesleri.bosmu()&&gercekZamanliProsesler.bosmu()&& dusukOncelikKuyrugu.bosmu()&&
                     yuksekOncelikKuyrugu.bosmu()&& ortaOncelikKuyrugu.bosmu()&&kullaniciProsesi==null&&gercekZamanliCalisanProses==null){
                 break;
             }
@@ -163,7 +161,7 @@ public class Görevlendirici {
 
                     }
                     else{
-                        kullanıcıProsesleri.ekle(proses);
+                        kullaniciProsesleri.ekle(proses);
                     }
                     prosesler.sil(proses);
                 }
@@ -171,8 +169,8 @@ public class Görevlendirici {
 
 
         }
-        if(!kullanıcıProsesleri.bosmu()) {
-            for (var kullaniciProses : kullanıcıProsesleri.getAll().stream().toList()) {
+        if(!kullaniciProsesleri.bosmu()) {
+            for (var kullaniciProses : kullaniciProsesleri.getAll().stream().toList()) {
                 kullaniciProses.setProsesDurumu("proses kuyrukta");
 
                 if (kullaniciProses.getOncelikDegeri() == 1) {
@@ -186,7 +184,7 @@ public class Görevlendirici {
 
                 }
 
-                kullanıcıProsesleri.sil(kullaniciProses);
+                kullaniciProsesleri.sil(kullaniciProses);
             }
         }
     }
@@ -307,6 +305,6 @@ public class Görevlendirici {
 
     }
     private void yazdir(String color, int zaman, int prosesId, int oncelik, int kalanSure,String prosesDurumu,int beklemeSuresi){
-        System.out.println(color+zaman+" sn "+"\t"+ prosesDurumu+"\t \t" +"\t(id: "+prosesId +"   "+"öncelik: "+oncelik+"    "+ "kalan süre: "+kalanSure+" bekleme süresi: "+beklemeSuresi+")");
+        System.out.println(color+zaman+" sn "+"\t"+ prosesDurumu+"\t \t" +"\t(id: "+prosesId +"   "+"oncelik: "+oncelik+"    "+ "kalan sure: "+kalanSure+" bekleme suresi: "+beklemeSuresi+")");
     }
 }

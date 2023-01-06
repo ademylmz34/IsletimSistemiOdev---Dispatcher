@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -27,8 +26,8 @@ public class Main {
             id++;
 
         }
-        Görevlendirici görevlendirici = new Görevlendirici(prosesler);
-        görevlendirici.baslat();
+        Gorevlendirici gorevlendirici = new Gorevlendirici(prosesler);
+        gorevlendirici.baslat();
 
     }
 }
