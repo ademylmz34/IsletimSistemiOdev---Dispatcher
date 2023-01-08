@@ -15,6 +15,7 @@ public class Color {
     }
 
     public String getRandomColor(){
+        //her bir prosese colors dizisinden farklı bir renk atanir
         int rnd;
         do{
             rnd = new Random().nextInt(colors.length);

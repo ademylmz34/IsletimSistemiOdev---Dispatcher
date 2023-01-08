@@ -7,8 +7,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         int id=0;
-        Color clr = new Color();
-        Kuyruk prosesler = new Kuyruk();
+        Color clr = new Color(); // her prosese renk atama işlemi için color sınıfından nesne olusturuyorum
+        Kuyruk prosesler = new Kuyruk(); // txt dosyasından okumuş olduğum prosesleri prosesler kuyruğuna atacagım
 
         File data = new File("src/giris.txt");
         Scanner readFile = new Scanner(data);
@@ -22,11 +22,12 @@ public class Main {
             int oncelik = Integer.parseInt(columns[1]);
             int prosesSuresi = Integer.parseInt(columns[2]);
 
-
+            // txt dosyasından okumuş olduğum satırları tek tek prosesler kuyruğuna atiyorum
             prosesler.ekle(new Proses(id,varisZamani,oncelik,prosesSuresi, clr.getRandomColor()));
             id++;
 
         }
+        //prosesler kuyrugunu görevlendirici sinifina gönderip islemleri orada icra edeceğim
         Gorevlendirici görevlendirici = new Gorevlendirici(prosesler);
         görevlendirici.baslat();
 
