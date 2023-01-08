@@ -1,10 +1,8 @@
-import java.util.function.Predicate;
-
-public class Görevlendirici {
+public class Gorevlendirici {
 
     private Kuyruk prosesler;
     private Kuyruk gercekZamanliProsesler;
-    private Kuyruk kullanıcıProsesleri;
+    private Kuyruk kullaniciProsesleri;
     private Kuyruk yuksekOncelikKuyrugu;
     private Kuyruk ortaOncelikKuyrugu;
     private Kuyruk dusukOncelikKuyrugu;
@@ -17,9 +15,9 @@ public class Görevlendirici {
     private Proses kullaniciProsesi;
 
 
-    public Görevlendirici(Kuyruk prosesler){
+    public Gorevlendirici(Kuyruk prosesler){
         this.gercekZamanliProsesler = new Kuyruk();
-        this.kullanıcıProsesleri = new Kuyruk();
+        this.kullaniciProsesleri = new Kuyruk();
         this.yuksekOncelikKuyrugu = new Kuyruk();
         this.ortaOncelikKuyrugu = new Kuyruk();
         this.dusukOncelikKuyrugu = new Kuyruk();
@@ -33,11 +31,13 @@ public class Görevlendirici {
 
     public void baslat(){
 
-        while(true){
-
+        while(true)
+        {
+            //prosesleri zamana bagli olarak ilgili kuyruklara atacagim
             prosesleriKuyruklaraAta();
+            //gercekZamanliProsesler kuyrugu bos degilse önce onlar calistirilacaktir
             if(!gercekZamanliProsesler.bosmu()||gercekZamanliCalisanProses!=null){
-
+                //gercekZamanliProsesler calismadan önce calisan kullanici prosesi varsa onu bekleme moduna almaliyim
                 if(kullaniciProsesi.getProsesDurumu()=="proses basladi"){
                     kullaniciProsesi.setProsesDurumu("proses beklemede");
                     if (kullaniciProsesi.getOncelikDegeri()==1){
@@ -59,7 +59,7 @@ public class Görevlendirici {
                 }
 
                 if(gercekZamanliCalisanProses == null) {
-
+                    //gercekZamanliCalisan prosesleri baslatma islemi buradan icra edilmektedir
                     gercekZamanliCalisanProses = gercekZamanliProsesler.ilkElemaniGetir();
                     gercekZamanliCalisanProses.setProsesDurumu("proses basladi");
                     yazdir(gercekZamanliCalisanProses.getColor(),zaman,gercekZamanliCalisanProses.getProsesId(),gercekZamanliCalisanProses.getOncelikDegeri()
@@ -70,39 +70,29 @@ public class Görevlendirici {
                     continue;
                 }
                 else{
+                    //gercek zamanli prosesler calisirken kuyruga alinan kullanici proseslerinin zaman asimina ugrayip ugramadigi kontrol edilir
                     prosesZamanAsimiKontrol();
+                    //gercek zamanli calisan prosesler varsa isi bittiyse sonlandirilir bitmediyse yürütülür ve bilgileri ekrana yazdirilir
                     zaman++;
                     if (gercekZamanliCalisanProses.getProsesSuresi()==0){
                         gercekZamanliCalisanProses.setProsesDurumu("proses sonlandi");
                         yazdir(gercekZamanliCalisanProses.getColor(),zaman,gercekZamanliCalisanProses.getProsesId(),gercekZamanliCalisanProses.getOncelikDegeri()
                                 ,gercekZamanliCalisanProses.getProsesSuresi(),gercekZamanliCalisanProses.getProsesDurumu(), gercekZamanliCalisanProses.getBeklemeSuresi());
                         gercekZamanliCalisanProses = null;
-
-
-
-
-
                     }else {
-
-                        gercekZamanliCalisanProses.setProsesDurumu("proses yürütülüyor");
+                        gercekZamanliCalisanProses.setProsesDurumu("proses yurutuluyor");
                         yazdir(gercekZamanliCalisanProses.getColor(),zaman,gercekZamanliCalisanProses.getProsesId(),gercekZamanliCalisanProses.getOncelikDegeri()
                                 ,gercekZamanliCalisanProses.getProsesSuresi(),gercekZamanliCalisanProses.getProsesDurumu(), gercekZamanliCalisanProses.getBeklemeSuresi());
                         kalanSure = gercekZamanliCalisanProses.getProsesSuresi() - 1;
                         gercekZamanliCalisanProses.setProsesSuresi(kalanSure);
-
-
                     }
-
                     continue;
                 }
-
-
-
             }
             else if((!dusukOncelikKuyrugu.bosmu()) || (!ortaOncelikKuyrugu.bosmu()) || (!yuksekOncelikKuyrugu.bosmu()) || kullaniciProsesi!=null ){
+                //calisan gercek zamanli prosesler olmadigi zaman kullanici prosesleri algoritmaya göre calistirilir
+                //öncelikle yuksek öncelik kuyruguna bakilir orada elemanlar varsa ilk onlar calistirilir
                 if (gercekZamanliCalisanProses==null) {
-
-
                     if (!yuksekOncelikKuyrugu.bosmu()) {
                         kullaniciProsesi = yuksekOncelikKuyrugu.ilkElemaniGetir();
 
@@ -112,201 +102,229 @@ public class Görevlendirici {
                     } else if(!dusukOncelikKuyrugu.bosmu()) {
                         kullaniciProsesi = dusukOncelikKuyrugu.ilkElemaniGetir();
                     }
-
-
                     if(kullaniciProsesi.getProsesDurumu()=="proses kuyrukta"){
+                        //kuyruktaki prosesler 1sn olacak sekilde calistirilmaya baslanir
                         prosesZamanAsimiKontrol();
                         kullaniciProsesi.setProsesDurumu("proses basladi");
 
                         yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
                                 ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu(), kullaniciProsesi.getBeklemeSuresi());
                         prosesBekletmeVeyaSonlandirma();
-
-
+                        //proses 1sn calistirilir isi biterse sonlandirilir bitmezse beklemeye alinip onceligi düsürülür
                         continue;
 
                     }
                     else if(kullaniciProsesi.getProsesDurumu()=="proses beklemede"){
+                        //proses beklemede ise yürütülür ve tekrar bekletmeye alinir veya sonlandirilir
                         prosesZamanAsimiKontrol();
                         kullaniciProsesi.setBeklemeSuresi(kullaniciProsesi.getBeklemeSuresi()+1);
-                        kullaniciProsesi.setProsesDurumu("proses yürütülüyor");
+                        kullaniciProsesi.setProsesDurumu("proses yurutuluyor");
 
                         yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
                                 ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu(), kullaniciProsesi.getBeklemeSuresi());
 
                         prosesBekletmeVeyaSonlandirma();
-
                         continue;
                     }
-
-
                 }
-
             }
-
-            if(prosesler.bosmu()&& kullanıcıProsesleri.bosmu()&&gercekZamanliProsesler.bosmu()&& dusukOncelikKuyrugu.bosmu()&&
+            //tüm proses kuyruklari bos ise calistirilcak proses kalmamistir ve program sonlandirilir
+            if(prosesler.bosmu()&& kullaniciProsesleri.bosmu()&&gercekZamanliProsesler.bosmu()&& dusukOncelikKuyrugu.bosmu()&&
                     yuksekOncelikKuyrugu.bosmu()&& ortaOncelikKuyrugu.bosmu()&&kullaniciProsesi==null&&gercekZamanliCalisanProses==null){
                 break;
             }
-
-
         }
     }
-    private void prosesleriKuyruklaraAta(){
-        if(!prosesler.bosmu()){
+    private void prosesleriKuyruklaraAta()
+    {
+        if(!prosesler.bosmu())
+        {
             for(var proses : prosesler.getAll().stream().toList())
             {
-                if(proses.getVarisZamani()==zaman){
+                if(proses.getVarisZamani()==zaman)
+                {
 
-                    if(proses.getOncelikDegeri()==0){
+                    if(proses.getOncelikDegeri()==0)
+                    {
                         gercekZamanliProsesler.ekle(proses);
-
                     }
-                    else{
-                        kullanıcıProsesleri.ekle(proses);
+                    else
+                    {
+                        kullaniciProsesleri.ekle(proses);
                     }
                     prosesler.sil(proses);
                 }
             }
-
-
         }
-        if(!kullanıcıProsesleri.bosmu()) {
-            for (var kullaniciProses : kullanıcıProsesleri.getAll().stream().toList()) {
+        if(!kullaniciProsesleri.bosmu())
+        {
+            //kullanici proseslerini kuyruklara atildiginda durumunu proses kuyrukta olarak güncelliyorum
+            for (var kullaniciProses : kullaniciProsesleri.getAll().stream().toList())
+            {
                 kullaniciProses.setProsesDurumu("proses kuyrukta");
 
-                if (kullaniciProses.getOncelikDegeri() == 1) {
+                if (kullaniciProses.getOncelikDegeri() == 1) 
+                {
                     yuksekOncelikKuyrugu.ekle(kullaniciProses);
-
-                } else if (kullaniciProses.getOncelikDegeri() == 2) {
+                } else if (kullaniciProses.getOncelikDegeri() == 2)
+                {
                     ortaOncelikKuyrugu.ekle(kullaniciProses);
-
-                } else {
+                } else
+                {
                     dusukOncelikKuyrugu.ekle(kullaniciProses);
-
                 }
-
-                kullanıcıProsesleri.sil(kullaniciProses);
+                kullaniciProsesleri.sil(kullaniciProses);
             }
         }
     }
-    private void prosesBekletmeVeyaSonlandirma(){
+    private void prosesBekletmeVeyaSonlandirma()
+    {
         zaman++;
+        //proses bekletmeye alindiginda bekleme süresi tekrardan sifirlanir
         kullaniciProsesi.setBeklemeSuresi(0);
         kalanSure = kullaniciProsesi.getProsesSuresi()-1;
         kullaniciProsesi.setProsesSuresi(kalanSure);
-        if(kullaniciProsesi.getProsesSuresi()!=0){
-            if(kullaniciProsesi.getOncelikDegeri()==1){
+        if(kullaniciProsesi.getProsesSuresi()!=0)
+        {
+            //burada prosesler sonlanmadiysa öncelikleri düsürülür ve bir alt kuyruklara atama islemleri yapilir
+            if(kullaniciProsesi.getOncelikDegeri()==1)
+            {
                 kullaniciProsesi.setOncelikDegeri(2);
                 ortaOncelikKuyrugu.ekle(kullaniciProsesi);
             }
-            else if(kullaniciProsesi.getOncelikDegeri()==2){
+            else if(kullaniciProsesi.getOncelikDegeri()==2)
+            {
                 kullaniciProsesi.setOncelikDegeri(3);
                 dusukOncelikKuyrugu.ekle(kullaniciProsesi);
             }
-            else if(kullaniciProsesi.getOncelikDegeri()==3){
+            else if(kullaniciProsesi.getOncelikDegeri()==3)
+            {
                 dusukOncelikKuyrugu.ekle(kullaniciProsesi);
             }
 
             kullaniciProsesi.setProsesDurumu("proses beklemede");
             yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
                     ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu(), kullaniciProsesi.getBeklemeSuresi());
-
-
-
         }
-        else{
+        else
+        {
+            //prosesin isi bittiyse sonlandirilir ve ilgili kuyruktan proses silinir
             kullaniciProsesi.setProsesDurumu("proses sonlandi");
             yazdir(kullaniciProsesi.getColor(),zaman,kullaniciProsesi.getProsesId(),kullaniciProsesi.getOncelikDegeri()
                     ,kullaniciProsesi.getProsesSuresi(),kullaniciProsesi.getProsesDurumu(), kullaniciProsesi.getBeklemeSuresi());
-            if(kullaniciProsesi.getOncelikDegeri()==3) {
+            if(kullaniciProsesi.getOncelikDegeri()==3) 
+            {
                 dusukOncelikKuyrugu.sil(kullaniciProsesi);
             }
-            else if(kullaniciProsesi.getOncelikDegeri()==2){
+            else if(kullaniciProsesi.getOncelikDegeri()==2)
+            {
                 ortaOncelikKuyrugu.sil(kullaniciProsesi);
             }
             else{
                 yuksekOncelikKuyrugu.sil(kullaniciProsesi);
             }
             kullaniciProsesi = null;
-
         }
     }
-    private void prosesZamanAsimiKontrol(){
-
-        if(!yuksekOncelikKuyrugu.bosmu()){
-            for(var proses : yuksekOncelikKuyrugu.getAll().stream().toList()){
+    private void prosesZamanAsimiKontrol()
+    {
+        //kullanici prosesleri ilgili tüm kuyruklarda prosesler saniye saniye kontrol edilir ve bekleme süreleri 1 er 1 er arttırılır
+        // zaman asimina ugrayan proses varsa proses sonlandirilir
+        if(!yuksekOncelikKuyrugu.bosmu())
+        {
+            for(var proses : yuksekOncelikKuyrugu.getAll().stream().toList())
+            {
 
                 if(proses.getProsesDurumu()=="proses beklemede"||proses.getProsesDurumu()=="proses kuyrukta"){
 
-                        if(proses.getBeklemeSuresi()==20){
-                            proses.setProsesDurumu("proses zaman asimi");
-                            yazdir(proses.getColor(),zaman,proses.getProsesId(),proses.getOncelikDegeri()
-                                    ,proses.getProsesSuresi(),proses.getProsesDurumu(), proses.getBeklemeSuresi());
+                    if(proses.getBeklemeSuresi()==20)
+                    {
+                        proses.setProsesDurumu("proses zaman asimi");
+                        yazdir(proses.getColor(),zaman,proses.getProsesId(),proses.getOncelikDegeri()
+                                ,proses.getProsesSuresi(),proses.getProsesDurumu(), proses.getBeklemeSuresi());
 
-                            yuksekOncelikKuyrugu.sil(proses);
-
-                        }
-                        else{
-                            proses.setBeklemeSuresi(proses.getBeklemeSuresi()+1);
-                        }
-
+                        yuksekOncelikKuyrugu.sil(proses);
+                    }
+                    else
+                    {
+                        proses.setBeklemeSuresi(proses.getBeklemeSuresi()+1);
+                    }
                 }
-
-
-
             }
         }
-        if(!ortaOncelikKuyrugu.bosmu()){
-            for(var proses : ortaOncelikKuyrugu.getAll().stream().toList()){
+        if(!ortaOncelikKuyrugu.bosmu())
+        {
+            for(var proses : ortaOncelikKuyrugu.getAll().stream().toList())
+            {
 
-                if(proses.getProsesDurumu()=="proses beklemede"||proses.getProsesDurumu()=="proses kuyrukta"){
+                if(proses.getProsesDurumu()=="proses beklemede"||proses.getProsesDurumu()=="proses kuyrukta")
+                {
 
-                        if(proses.getBeklemeSuresi()==20){
-                            proses.setProsesDurumu("proses zaman asimi");
-                            yazdir(proses.getColor(),zaman,proses.getProsesId(),proses.getOncelikDegeri()
-                                    ,proses.getProsesSuresi(),proses.getProsesDurumu(), proses.getBeklemeSuresi());
+                    if(proses.getBeklemeSuresi()==20)
+                    {
+                        proses.setProsesDurumu("proses zaman asimi");
+                        yazdir(proses.getColor(),zaman,proses.getProsesId(),proses.getOncelikDegeri()
+                                ,proses.getProsesSuresi(),proses.getProsesDurumu(), proses.getBeklemeSuresi());
 
-                            ortaOncelikKuyrugu.sil(proses);
-
-                        }
-                        else{
-                            proses.setBeklemeSuresi(proses.getBeklemeSuresi()+1);
-                        }
-
+                        ortaOncelikKuyrugu.sil(proses);
+                    }
+                    else
+                    {
+                        proses.setBeklemeSuresi(proses.getBeklemeSuresi()+1);
+                    }
                 }
-
-
-
             }
         }
-        if(!dusukOncelikKuyrugu.bosmu()){
-            for(var proses : dusukOncelikKuyrugu.getAll().stream().toList()){
-                if(proses.getProsesDurumu()=="proses beklemede"||proses.getProsesDurumu()=="proses kuyrukta"){
-
-                        if(proses.getBeklemeSuresi()==20){
-                            proses.setProsesDurumu("proses zaman asimi");
-                            yazdir(proses.getColor(),zaman,proses.getProsesId(),proses.getOncelikDegeri()
-                                    ,proses.getProsesSuresi(),proses.getProsesDurumu(), proses.getBeklemeSuresi());
-
-                            dusukOncelikKuyrugu.sil(proses);
-
-                        }
-                        else{
-                            proses.setBeklemeSuresi(proses.getBeklemeSuresi()+1);
-                        }
-
+        if(!dusukOncelikKuyrugu.bosmu())
+        {
+            for(var proses : dusukOncelikKuyrugu.getAll().stream().toList())
+            {
+                if(proses.getProsesDurumu()=="proses beklemede"||proses.getProsesDurumu()=="proses kuyrukta")
+                {
+                    if(proses.getBeklemeSuresi()==20)
+                    {
+                        proses.setProsesDurumu("proses zaman asimi");
+                        yazdir(proses.getColor(),zaman,proses.getProsesId(),proses.getOncelikDegeri()
+                                ,proses.getProsesSuresi(),proses.getProsesDurumu(), proses.getBeklemeSuresi());
+                        dusukOncelikKuyrugu.sil(proses);
+                    }
+                    else
+                    {
+                        proses.setBeklemeSuresi(proses.getBeklemeSuresi()+1);
+                    }
                 }
-
-
-                }
-
-
+            }
         }
-
-
     }
-    private void yazdir(String color, int zaman, int prosesId, int oncelik, int kalanSure,String prosesDurumu,int beklemeSuresi){
-        System.out.println(color+zaman+" sn "+"\t"+ prosesDurumu+"\t \t" +"\t(id: "+prosesId +"   "+"öncelik: "+oncelik+"    "+ "kalan süre: "+kalanSure+" bekleme süresi: "+beklemeSuresi+")");
+    private void yazdir(String color, int zaman, int prosesId, int oncelik, int kalanSure,String prosesDurumu,int beklemeSuresi)
+    {
+        String esitlenmisProses = prosesDurumDuzenle(prosesDurumu,18);
+        System.out.print(color+zaman);
+        if(zaman < 10)
+            System.out.print(" ");
+        System.out.print(" sn "+"\t"+ esitlenmisProses+"\t \t" +"\t(id: "+prosesId);
+        if(prosesId<10)
+            System.out.printf(" ");
+        System.out.printf("   "+"oncelik: "+oncelik+"    "+ "kalan sure: "+kalanSure);
+        if(kalanSure < 10)
+            System.out.print(" ");
+        System.out.print(" bekleme suresi: "+beklemeSuresi);
+        if(beklemeSuresi<10)
+            System.out.printf(" ");
+        System.out.println(")");
+    }
+    private String prosesDurumDuzenle(String alinanString, int boyut)//String boyutunu düzenleme
+    {
+        if (alinanString.length() >= boyut)
+        {
+            return alinanString;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(alinanString);
+        while (sb.length() < boyut)
+        {
+            sb.append(' ');
+        }
+        return sb.toString();
     }
 }
