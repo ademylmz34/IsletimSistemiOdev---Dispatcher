@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
@@ -10,8 +11,14 @@ public class Main {
         Color clr = new Color(); // her prosese renk atama işlemi için color sınıfından nesne olusturuyorum
         Kuyruk prosesler = new Kuyruk(); // txt dosyasından okumuş olduğum prosesleri prosesler kuyruğuna atacagım
 
-        File data = new File("src/giris.txt");
-        Scanner readFile = new Scanner(data);
+        File data;
+        Scanner readFile;
+        try {//Dosyadan okuma ve hata yakalama
+            data = new File(args[0]);
+            readFile = new Scanner(data);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         while (readFile.hasNextLine()) {
             String line = readFile.nextLine();
