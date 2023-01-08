@@ -19,6 +19,11 @@ public class Color {
         //her bir prosese colors dizisinden farklı bir renk atanir
         int rnd;
         do{
+            if(colorList.size()== colors.length){
+                //yukarıdaki dizi sayisindan fazla proses varsa mecburen herhangi bir prosese atanmış olan color yeni prosese de atanacaktır.
+                rnd = new Random().nextInt(colors.length);
+                return colors[rnd];
+            }
             rnd = new Random().nextInt(colors.length);
         }
         while (colorList.contains(colors[rnd]));
